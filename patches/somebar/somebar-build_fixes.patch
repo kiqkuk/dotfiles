@@ -1,0 +1,47 @@
+# Patch: Fix Build Warnings & Logic Safety in LineBuffer
+# Author: kiqkuk
+# Date: 2026-04-03
+# Issue 1: Fixes deprecated 'get_pkgconfig_variable' warning in Meson (v1.10+).
+# Issue 2: Uses In-class member initializers to satisfy strict GCC ordering.
+# Issue 3: Fixes potential overlap data corruption in resetBuffer.
+# Note: These are technical debt fixes required for compilation on Arch Linux.
+
+diff --git a/protocols/meson.build b/protocols/meson.build
+index 7bd222b..977af6c 100644
+--- a/protocols/meson.build
++++ b/protocols/meson.build
+@@ -1,7 +1,7 @@
+ # adapted from https://github.com/swaywm/swayidle/blob/0467c1e03a5780ed8e3ba611f099a838822ab550/meson.build
+ wayland_scanner = find_program('wayland-scanner')
+ wayland_protos_dep = dependency('wayland-protocols')
+-wl_protocol_dir = wayland_protos_dep.get_pkgconfig_variable('pkgdatadir')
++wl_protocol_dir = wayland_protos_dep.get_variable('pkgdatadir')
+ wayland_scanner_code = generator(
+ 	wayland_scanner,
+ 	output: '@BASENAME@-protocol.c',
+
+diff --git a/src/line_buffer.hpp b/src/line_buffer.hpp
+--- a/src/line_buffer.hpp
++++ b/src/line_buffer.hpp
+@@ -11,14 +11,11 @@ class LineBuffer {
+ 	using Iterator = typename std::array<char, BufSize>::iterator;
+ 	std::array<char, BufSize> _buffer;
+-	Iterator _bufferedTo;
+-	Iterator _consumedTo;
++	Iterator _bufferedTo {_buffer.begin()};
++	Iterator _consumedTo {_buffer.begin()};
+ 	bool _discardLine {false};
+ public:
+-	LineBuffer()
+-		: _bufferedTo {_buffer.begin()}
+-		, _consumedTo {_buffer.begin()}
+-	{
++	LineBuffer() {
+ 	}
+@@ -62,7 +59,7 @@ private:
+ 		} else {
+-			std::copy(_consumedTo, _bufferedTo, _buffer.begin());
++			std::move(_consumedTo, _bufferedTo, _buffer.begin());
+ 			_consumedTo = _buffer.begin();
+ 			_bufferedTo = _consumedTo + bytesRemaining;
+ 		}

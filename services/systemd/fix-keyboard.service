@@ -1,0 +1,13 @@
+[Unit]
+Description=Disable Ghost Key Scancode 56 (KEY_102ND)
+After=generic-board-startup.service
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/setkeycodes 56 0
+RemainAfterExit=yes
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

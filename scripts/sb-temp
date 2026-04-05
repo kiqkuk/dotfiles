@@ -1,0 +1,9 @@
+#!/bin/sh
+
+temp=$(sensors | grep 'Package id 0' | awk '{print $4}' | tr -d '+°C')
+
+if [ "${temp%.*}" -gt 80 ]; then
+    echo "🔥 $temp°C"
+else
+    echo " $temp°C"
+fi

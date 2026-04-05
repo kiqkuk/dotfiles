@@ -1,0 +1,10 @@
+#!/bin/sh
+
+ssid=$(iwctl station wlan0 show | grep 'Connected network' | sed 's/^.*Connected network *//')
+
+if [ -z "$ssid" ]; then
+	echo "󰤮 Offline"
+else
+	ssid_clean=$(echo "$ssid" | xargs)
+	echo "󰤨 $ssid_clean"
+fi

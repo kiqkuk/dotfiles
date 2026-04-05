@@ -1,0 +1,22 @@
+#!/bin/sh
+# --- WAYLAND SESSION WRAPPER ---
+# Sets up the Wayland environment and starts the window manager.
+
+# Graphics & Toolkit Acceleration (Intel)
+export LIBVA_DRIVER_NAME=ihd
+export MOZ_ENABLE_WAYLAND=1
+export QT_QPA_PLATFORM=wayland
+export CLUTTER_BACKEND=wayland
+export SDL_VIDEODRIVER=wayland
+
+# Fix for Java apps in tiling WMs
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# XDG Desktop Portal
+export XDG_CURRENT_DESKTOP=dwl
+
+# Autostart Apps
+pkill someblocks
+someblocks &
+
+exec dwl -s somebar "$@"

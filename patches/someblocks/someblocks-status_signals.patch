@@ -1,0 +1,32 @@
+# Patch: Custom Blocks & RTMIN Signals for someblocks
+# Author: kiqkuk
+# Date: 2026-04-05
+# Issue: Configures personal status bar layout and real-time update signals.
+# Description: Redirect blocks to use custom scripts and enable RTMIN for instant updates.
+# Dependency: Requires custom 'sb-*' scripts to be present in $PATH for functional status reporting.
+
+diff --git a/blocks.def.h b/blocks.h
+--- a/blocks.def.h
++++ b/blocks.h
+@@ -1,9 +1,19 @@
+ //Modify this file to change what commands output to your statusbar, and recompile using the make command.
+ static const Block blocks[] = {
+ 	/*Icon*/	/*Command*/		/*Update Interval*/	/*Update Signal*/
+-	{"Mem:", "free -h | awk '/^Mem/ { print $3\"/\"$2 }' | sed s/i//g",	30,		0},
++	{"",		"sb-wifi",		30,			1},
+ 
+-	{"", "date '+%b %d (%a) %I:%M%p'",					5,		0},
++	{"",		"sb-mem",		10,			14},
++
++	{"",		"sb-temp",		5,			15},
++
++	{"",		"sb-brightness",	60,			11},
++
++	{"",		"sb-vol",		60,			10},
++
++	{"",		"sb-bat",		60,			2},
++
++	{"",		"sb-date",		60,			0},
+ 	
+ 	/* Updates whenever "pkill -SIGRTMIN+10 someblocks" is ran */
+ 	/* {"", "date '+%b %d (%a) %I:%M%p'",					0,		10}, */

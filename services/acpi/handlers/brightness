@@ -1,0 +1,25 @@
+#!/bin/sh
+
+path="/sys/class/backlight/intel_backlight"
+curr=$(cat "$path/brightness")
+max=$(cat "$path/max_brightness")
+step=$(( max / 20 ))
+
+case "$1" in
+    video/brightnessup*)
+        new=$(( curr + step ))
+	if [ "$new" -gt "$max" ]; then
+		new=$max
+	fi
+        echo "$new" > "$path/brightness"
+        ;;
+    video/brightnessdown*)
+        new=$(( curr - step ))
+        if [ $new -lt 0 ]; then
+		new=0
+	fi
+        echo "$new" > "$path/brightness"
+        ;;
+esac
+
+pkill -RTMIN+11 someblocks

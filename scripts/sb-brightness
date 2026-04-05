@@ -1,0 +1,10 @@
+#!/bin/sh
+
+backlight_path="/sys/class/backlight/intel_backlight"
+
+curr=$(cat "$backlight_path/brightness")
+max=$(cat "$backlight_path/max_brightness")
+
+perc=$(( 100 * curr / max ))
+
+echo "󰃠 ${perc}%"

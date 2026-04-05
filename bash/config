@@ -1,0 +1,21 @@
+# --- BASH MAIN CONFIGURATION ---
+# Part of kiqkuk's dotfiles
+# Handles environment, modular shell configs, and TTY1 autostart.
+
+DOTFILES_BASH="$HOME/projects/dotfiles/bash"
+
+# Load environment & PATH
+[[ -f "$DOTFILES_BASH/env" ]] && . "$DOTFILES_BASH/env"
+
+# Exit if not running interactively
+[[ $- != *i* ]] && return
+
+# Load modular shell components
+[[ -f "$DOTFILES_BASH/completions" ]] && . "$DOTFILES_BASH/completions"
+[[ -f "$DOTFILES_BASH/aliases" ]] && . "$DOTFILES_BASH/aliases"
+[[ -f "$DOTFILES_BASH/prompt" ]] && . "$DOTFILES_BASH/prompt"
+
+# Autostart dwl on TTY1
+if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
+    exec dwl-start
+fi

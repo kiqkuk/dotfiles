@@ -1,0 +1,18 @@
+# --- BASH COMPLETION & READLINE SETTINGS ---
+# Configures advanced Tab-completion with menu selection and case-insensitivity.
+
+# Load system-wide bash completions if available
+if [[ -f /usr/share/bash-completion/bash_completion ]]; then
+	. /usr/share/bash-completion/bash_completion
+fi
+
+# General Readline behavior
+bind "set show-all-if-ambiguous on"		# Show list immediately on first Tab
+bind "set completion-ignore-case on"		# Case-insensitive matching
+bind "set completion-map-case on"		# Treat hyphens and underscores as equivalent
+bind "set mark-directories on"			# Append slash to completed directory names
+
+# Menu Completion
+bind 'set menu-complete-display-prefix on'
+bind '"\t": menu-complete'			# Tab: Move forward in menu
+bind '"\e[Z": menu-complete-backward'		# Shift-Tab: Move backward in menu

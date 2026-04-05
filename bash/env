@@ -1,0 +1,31 @@
+# --- ENVIRONMENT VARIABLES ---
+# Standardized paths and application default for a Wayland-native environment.
+
+# XDG Base Directory Compliance
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# Path Configuration
+# Prioritize custom script and local binaries
+export PATH="$HOME/projects/dotfiles/scripts:$HOME/.local/bin:$PATH"
+
+# Shell History Management
+# Centralized history file within XDG_STATE_HOME
+export HISTFILE="$XDG_STATE_HOME/bash/history"
+HISTSIZE=10000
+HISTFILESIZE=10000
+shopt -s histappend
+# Keep history synced across multiple terminals
+PROMPT_COMMAND="history -a; history -c; history -r"
+
+# Persistence and Control
+HISTCONTROL=ignoreboth:erasedups
+export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
+
+# Default Applications
+export TERMINAL="foot"
+export EDITOR="nvim"
+export VISUAL="nvim"
+

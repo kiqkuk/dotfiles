@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cap=$(cat /sys/class/power_supply/BAT0/capacity)
+stat=$(cat /sys/class/power_supply/BAT0/status)
+
+[ "$stat" = "Charging" ] && echo "󱐋 $cap%" || echo "󰂂 $cap%"
