@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="serio", DRIVERS=="atkbd", RUN+="/usr/bin/setkeycodes 56 255"

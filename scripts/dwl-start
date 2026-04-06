@@ -15,8 +15,5 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # XDG Desktop Portal
 export XDG_CURRENT_DESKTOP=dwl
 
-# Autostart Apps
-pkill someblocks
-someblocks &
 
-exec dwl -s somebar "$@"
+exec dwl -s "$HOME/projects/dotfiles/scripts/dwl-init" "$@"

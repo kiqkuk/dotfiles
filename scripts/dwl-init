@@ -1,0 +1,30 @@
+#!/bin/sh
+# --- dwl-init: Internal Autostart ---
+
+# 1. Pastikan WAYLAND_DISPLAY tersedia
+# Jika kosong, asumsikan default wayland-0
+: "${WAYLAND_DISPLAY:=wayland-0}"
+export WAYLAND_DISPLAY
+
+# 2. Tunggu socket benar-benar ready
+MAX_RETRIES=50
+COUNT=0
+while [ ! -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ] && [ $COUNT -lt $MAX_RETRIES ]; do
+    sleep 0.1
+    COUNT=$((COUNT + 1))
+done
+
+# 3. Kill proses lama (Bersih-bersih)
+pkill swaybg
+pkill someblocks
+pkill somebar
+
+# 4. Jalankan Wallpaper dengan log error untuk debug
+# Pastikan path wallpaper benar-benar ada!
+swaybg -i "$HOME/Pictures/ethan-hoover-eIVJAkj1uCs-unsplash.jpg" -m fill > /tmp/swaybg.log 2>&1 &
+
+# 5. Status blocks
+someblocks &
+
+# 6. Bar (Jangan gunakan exec dulu untuk testing)
+somebar

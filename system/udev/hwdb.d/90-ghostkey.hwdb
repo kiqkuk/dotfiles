@@ -1,0 +1,4 @@
+# Target: Lenovo IdeaPad 3 14ITL6
+# Disable Ghost Key Scancode 0x56 (KEY_102ND)
+evdev:atkbd:dmi:bvnLENOVO:*:pvrIdeaPad314ITL6:*
+ KEYBOARD_KEY_56=reserved
