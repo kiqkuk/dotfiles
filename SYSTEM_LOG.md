@@ -2,7 +2,7 @@
 
 ## [2026-04-06] - initial recovery & hardening
 ### input fix (ghostkey)
-- **problem:**  scancode `0x56` (KEY_102ND) spamming.
+- **issue:**  scancode `0x56` (KEY_102ND) spamming.
 - **src:**      `~/dots/system/udev/`
 - **target:**   `/etc/udev/`
 - **verify:**   `sudo udevadm info /dev/input/eventX` | `libinput debug-events` 
@@ -28,19 +28,28 @@
 ---
 
 ## [2026-04-08] - system stability & optimization
-### ghost key fix migrate to service
-- **problem:**  udev hwdb can't stop log spam.
+### ghost key fix mitigation
+- **issue:**  `udev` hwdb rules failed to suppress log spam.
+- **action:**   migrated fix to a dedicated systemd service
 - **src:**      `~/dots/system/systemd/system/fix-ghostkey.service` -> `/etc/systemd/system/fix-ghostkey.service`
 
 ### initramfs migration (booster)
-- **problem:**  `mkinitcpio` build too slow and too bulk (20MB)
-- **action:**   install `booster` and configs `/etc/booster.yaml` with `strip: true` and `compression: zstd`
-- **result:**   img size 4MB
+- **issue:**  `mkinitcpio` build process was inefficient and output size was too bulky (~20MB)
+- **action:**   migrated to `booster`. configured `/etc/booster.yaml` with `strip: true` and `compression: zstd`
+- **result:**   initramfs image size reduzed to **4MB**
 
 ### migrate to doas
+- **action:**   replaced `sudo` with `doas` for a smaller footprint
 - **config:**   `/etc/doas.conf` with `permit persist :wheel`
-- **tweak:**    create custom binary `/usr/local/bin/sudo` to `exec doas "$@"`
+- **tweak:**    created wrapper at `/usr/local/bin/sudo` to `exec doas "$@"`
 
-### log pam & d-bus cleanup
-- **problem:**  log spam `activation request for `org.freedesktop.home1` failed` at login
-- **fix:**      commented out (`#`) line `pam_systemd_home.so` on `/etc/pam.d/system-auth`
+### pam & d-bus cleanup
+- **issue:**    persistent log spam `activation request for `org.freedesktop.home1` failed` during login
+- **fix:**      hard-disabled `pam_systemd_home.so` in `/etc/pam.d/system-auth`
+
+### zram
+- **action:**   deployed `zram-generator` using `zstd` compression algorithm
+
+---
+
+
