@@ -1,0 +1,67 @@
+#!/bin/sh
+
+DOTS="$HOME/dots"
+
+echo "--- AUDIT: DOTS RECURSIVE CHECK ---"
+
+# checking files to audit
+find "$DOTS" -type f | while read -r DOT_FILE; do
+  REL_PATH="${DOT_FILE#$DOTS/}"
+
+  # mapping path
+  if [[ "$REL_PATH" == "system/"* ]]; then
+    TARGET_FILE="/etc/${REL_PATH#system/}"
+  elif [[ "$REL_PATH" == "user/"* ]]; then
+    TARGET_FILE="$HOME/.config/${REL_PATH#user/}"
+  else
+    continue
+  fi
+
+  # check if file is exist
+  if [ ! -f "$TARGET_FILE" ]; then
+    echo "[!] MISSING IN SYSTEM: $TARGET_FILE"
+    continue
+  fi
+
+  # checking if file is symlink
+  if [[ "$REL_PATH" == "user/"* ]]; then
+    if [ -L "$TARGET_FILE" ]; then
+      LINK_TARGET=$(readlink -f "$TARGET_FILE")
+      if [ "$LINK_TARGET" == "$DOT_FILE" ]; then
+        echo "[L] LINK OK: $REL_PATH"
+      else
+        echo "[W] WRONG LINK: $REL_PATH -> $LINK_TARGET"
+      fi
+    else
+      echo "[!] NOT A SYMLINK: $TARGET_FILE (Manual file detected)"
+    fi
+  fi
+
+  # diff check
+  diff -q "$DOT_FILE" "$TARGET_FILE" > /dev/null
+  if [ $? -ne 0 ]; then
+    echo "[X] DRIFT DETECTED: $REL_PATH"
+  elif [[ "$REL_PATH" == system/* ]]; then
+    echo "[V] SYNCED: $REL_PATH"
+  fi
+done
+
+echo ""
+echo "--- AUDIT: UNTRACKED USER CONFIGS (~/.config) ---"
+
+find "$HOME/.config" -maxdepth 3 -type f | while read -r CFG_FILE; do
+  if [ ! -L "$CFG_FILE" ]; then
+    echo "[?] LOCAL/UNTRACKED: ${CFG_FILE#$HOME/}"
+  fi
+done
+
+echo ""
+echo "--- AUDIT: UNTRACKED ROOT CONFIGS (/etc) ---"
+
+find /etc -maxdepth 5 -type f \( -name "*.conf" -o ! -name "*.*" \) | while read -r ETC_FILE; do
+  REL_ETC="${ETC_FILE#/etc/}"
+
+  if [ ! -f "$DOTS/system/$REL_ETC" ]; then
+    echo "[?] UNTRACKED ROOT: /etc/$REL_ETC"
+  fi
+done

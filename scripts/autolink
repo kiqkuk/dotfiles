@@ -1,0 +1,13 @@
+#!/bin/sh
+
+for app_dir in $HOME/dots/user/*; do
+  APP_NAME=$(basename "$app_dir")
+  mkdir -p "$HOME/.config/$APP_NAME"
+  
+  find "$app_dir" -type f | while read -r DOT_FILE; do
+    REL_FILE="${DOT_FILE#$app_dir/}"
+    TARGET_FILE="$HOME/.config/$APP_NAME/$REL_FILE"
+    mkdir -p "$(dirname "$TARGET_FILE")"
+    ln -sfv "$DOT_FILE" "$TARGET_FILE"
+  done
+done
