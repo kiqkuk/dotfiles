@@ -1,0 +1,7 @@
+#!/bin/sh
+
+selected=$(cliphist list | fzf --prompt="Clipboard: ")
+
+if [ -n "$selected" ]; then
+    echo "$selected" | cliphist decode | wl-copy
+fi

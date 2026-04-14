@@ -2,9 +2,9 @@
 # --- dwl-init: Internal Autostart ---
 
 swaybg -i "$HOME/pics/wallpaper.jpg" -m fill &
-
 swayidle -w timeout 600 'systemctl suspend' &
-
+wl-paste --type text --watch cliphist store &
+wl-paste --type image --watch cliphist store &
 someblocks &
 
 somebar
