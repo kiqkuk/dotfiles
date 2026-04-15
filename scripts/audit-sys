@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DOTS="$HOME/dots"
+DOTS="$HOME/.local/share/dots"
 
 echo "--- AUDIT: DOTS RECURSIVE CHECK ---"
 

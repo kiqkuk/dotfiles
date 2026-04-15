@@ -1,0 +1,52 @@
+#!/bin/sh
+
+DOTS_DIR=$(cd "$(dirname "$0")/.." && pwd)
+USER_DIR="$DOTS_DIR/user"
+SCRIPTS_SRC="$DOTS_DIR/scripts"
+BIN_TARGET="$HOME/.local/bin"
+
+echo "Checking for broken links..."
+find "$HOME/.config" "$BIN_TARGET" -maxdepth 1 -xtype l -delete -print 2>/dev/null
+
+if [ -d "$USER_DIR" ]; then
+  for app_dir in "$USER_DIR"/*; do
+    [ -d "$app_dir" ] || continue
+    APP_NAME=$(basename "$app_dir")
+  
+    find "$app_dir" -type f | while read -r DOT_FILE; do
+      REL_FILE="${DOT_FILE#$app_dir/}"
+      TARGET_FILE="$HOME/.config/$APP_NAME/$REL_FILE"
+      mkdir -p "$(dirname "$TARGET_FILE")"
+      ln -sfv "$DOT_FILE" "$TARGET_FILE"
+    done
+  done
+fi
+
+if [ -d "$SCRIPTS_SRC" ]; then
+  echo "Linking scripts to $BIN_TARGET..."
+  mkdir -p "$BIN_TARGET"
+  for script_file in "$SCRIPTS_SRC"/*; do
+    [ -f "$script_file" ] || continue
+    SCRIPT_NAME=$(basename "$script_file")
+    ln -sfv "$script_file" "$BIN_TARGET/$SCRIPT_NAME"
+  done
+fi
+
+ZSHENV="/etc/zsh/zshenv"
+ZDOTDIR_EXPORT="export ZDOTDIR=\"\$HOME/.config/zsh\""
+
+echo "Checking for ZSH installation..."
+
+if [ ! -d "/etc/zsh" ]; then
+  echo "WARNING!: /etc/zsh not found. Zsh might not be installed."
+  echo "Skipping ZDOTDIR configuration."
+else
+  echo "Ensuring ZDOTDIR is set in $ZSHENV."
+
+  if [ -f "$ZSHENV" ] && grep -q "ZDOTDIR" "$ZSHENV"; then
+    echo "ZDOTDIR already exported in $ZSHENV."
+  else
+    echo "Adding ZDOTDIR export to $ZSHENV (requires sudo)..."
+    echo "$ZDOTDIR_EXPORT" | sudo tee -a "$ZSHENV" > /dev/null
+  fi
+fi
