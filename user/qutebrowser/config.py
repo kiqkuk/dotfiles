@@ -738,3 +738,4 @@ c.colors.webpage.darkmode.enabled = False
 #   - smart-simple: On QtWebEngine 6.6, use a simpler algorithm for smart mode (based on numbers of colors and transparency), rather than an ML-based model. Same as 'smart' on older QtWebEnigne versions.
 c.colors.webpage.darkmode.policy.images = 'never'
 
+c.downloads.location.directory = '$HOME/down'
