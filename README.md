@@ -1,24 +1,27 @@
-# kiqkuk's Dotfiles
+# Miru
 
-This repository serves as a personal vault for my **custom scripts and configurations**. It's a collection of experiments, late-night hacks, and spontaneous ideas.
+A minimalist collection of system configurations and source code for daily workflow.
+Focused on Arch Linux and Wayland (dwl).
 
-**A fair warning**: This setup is highly personal. I made these because I felt like it, or just to see if I could. However, if a file exists in this repo, **I guarantee it works**.  
-*(works on my machine, anyway. yours? probably not hahaha)*
+*Miru is the name of my cat. I built this repository as a tribute to remember Miru, serving as the system I live in every day.*
 
-## The Setup
-Everything here is built with a **suckless** and **modular** mindset. Keeping things simple, minimal, and usable. I avoid long and complex scripts because **I often make typos**. Even with everything small and modular, **I still make typos sometimes**.
+## Structure
+- `bin/`: Modular scripts and status bar utilities.
+- `config/`: User application configurations (foot, qutebrowser, zsh, etc.).
+- `etc/`: Core system configurations (nftables, sysctl, acpi).
+- `pkg/`: Modified source code (dwl, somebar, someblocks).
+- `data/`: Package lists (`pkglist.txt`) and shell environment.
 
-- **Shell:**  
-Decoupled my bash config into env, completions, aliases, and prompt. They all meet in the main config file. Just make sure your **Bash can see the main config** and you're good.
+## Installation
+Ensure all dependencies listed in `data/pkglist.txt` are installed.
 
-- **Scripts:**  
-Mostly status bar logic. If you use somebar or dwm, you'll know what to do with these. As long as they're **in your $PATH** you're set.
+```bash
+# Clone
+git clone git@github.com:kiqkuk/miru.git ~/.local/share/miru
 
-- **Patches:**  
-My own tweaks for the suckless tools I use. ***I even added descriptions and comments to each patch.*** *(yeah, you're welcome)*
+# Build & Deploy
+cd ~/.local/share/miru
+./bin/deploy
 
-- **System:**  
-System-level stuff. This is the personal zone, **highly tuned for my specific hardware** and workflow. **You probably won't need these**, but they are here for reference.
-
-- **User:**  
-Other configs that locate at `~/.config/`
+## Note on System Configs:
+Files inside the `etc/` directory are currently not included in the `deploy` script. You must copy them manually. Most of these configurations are highly specific to my current hardware/device.
