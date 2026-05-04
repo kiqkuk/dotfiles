@@ -15,11 +15,13 @@ export PATH="$HOME/.local/bin:$PATH"
 # Shell History Management
 # Centralized history file within XDG_STATE_HOME
 export HISTFILE="$XDG_STATE_HOME/history"
-HISTSIZE=10000
-SAVEHIST=10000
+export HISTSIZE=10000
+export SAVEHIST=10000
 setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
 setopt HIST_REDUCE_BLANKS
 
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"

@@ -1,28 +1,22 @@
 # Miru
 
-A minimalist collection of system configurations and source code for daily workflow.
-Focused on Arch Linux and Wayland (dwl).
+This is my personal playground for Arch Linux. It's not a framework, it's not "pro", and it's definitely a work in progress.
 
-*Miru is the name of my cat. I built this repository as a tribute to remember Miru, serving as the system I live in every day.*
+*Miru was my cat. I keep this repository as a tribute to him. It's the system I live in every day.*
+
+## Why this exists?
+I recently moved from `dwm` (X11) to `dwl` (Wayland). I'm still exploring things like `somebar` and trying to figure out the best way to handle my daily flow. It's a bit messy, but I'm having a lot of fun building it.
 
 ## Structure
-- `bin/`: Modular scripts and status bar utilities.
-- `config/`: User application configurations (foot, qutebrowser, zsh, etc.).
-- `etc/`: Core system configurations (nftables, sysctl, acpi).
-- `pkg/`: Modified source code (dwl, somebar, someblocks).
-- `data/`: Package lists (`pkglist.txt`) and shell environment.
+- `bin/`: Random scripts I use for status bar and system tasks.
+- `config/`: Application settings (foot, qutebrowser, zsh, etc.).
+- `pkg/`: Source code for my modified builds of dwl, somebar, and someblocks.
+- `data/`: Contains the "raw material" that feeds into my scripts and environment.
 
-## Installation
-Ensure all dependencies listed in `data/pkglist.txt` are installed.
+## Feedback? Yes, please!
+I'm still learning and exploring Arch Linux and Wayland. Since I built this mostly by trial and error, I'm sure there are better or cleaner ways to do things. 
 
-```bash
-# Clone
-git clone git@github.com:kiqkuk/miru.git ~/.local/share/miru
+If you see something "stupid" or just have a tip on how to optimize my scripts/configs, I'd honestly appreciate the feedback. I'm here to learn, so feel free to open an issue or reach out.
 
-# Build & Deploy
-cd ~/.local/share/miru
-./bin/deploy
-```
-
-## Note on System Configs:
-Files inside the `etc/` directory are currently not included in the `deploy` script. You must copy them manually. Most of these configurations are highly specific to my current hardware/device.
+## Note
+Files in `etc/` are specific to my hardware and are not included in the deploy script to avoid breaking things. Use anything here at your own risk!
