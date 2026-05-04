@@ -1,10 +1,31 @@
 #!/bin/bash
 # miru: sb-wifi | kiqkuk
 
-ssid=$(iwctl station wlan0 show | sed -n 's/.*Connected network[[:space:]]*//p' | sed 's/\x1b\[[0-9;]*m//g' | xargs)
+ICON="󰤮"
+LABEL="Offline"
 
-if [ -z "$ssid" ]; then
-    echo "󰤮 Disconnected"
-else
-    echo "󰖩 $ssid"
+for eth in /sys/class/net/e*; do
+    if [[ -f "$eth/operstate" ]]; then
+        read -r state < "$eth/operstate"
+        if [[ "$state" == "up" ]]; then
+            ICON="󰈀"
+            LABEL="Eth"
+            break
+        fi
+    fi
+done
+
+if [[ "$LABEL" == "Offline" ]]; then
+    for wlan in /sys/class/net/w*; do
+        if [[ -f "$wlan/operstate" ]]; then
+            read -r state < "$wlan/operstate"
+            if [[ "$state" == "up" ]]; then
+                ICON="󰖩"
+                LABEL="Wifi"
+                break
+            fi
+        fi
+    done
 fi
+
+echo "$ICON $LABEL"
